@@ -1,0 +1,99 @@
+-- growagarden011 UI + Pet System Simulator (visual only)
+local player = game.Players.LocalPlayer
+local gui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+gui.Name = "growagarden011"
+
+-- MAIN FRAME
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0, 220, 0, 200)
+frame.Position = UDim2.new(0, 20, 0.5, -100)
+frame.BackgroundColor3 = Color3.fromRGB(30,30,30)
+frame.BorderSizePixel = 0
+frame.Active = true
+frame.Draggable = true
+
+-- TITLE
+local title = Instance.new("TextLabel", frame)
+title.Size = UDim2.new(1, 0, 0, 30)
+title.Text = "🐾 Pet Randomizer"
+title.TextColor3 = Color3.fromRGB(255,255,255)
+title.Font = Enum.Font.GothamBold
+title.TextSize = 16
+title.BackgroundColor3 = Color3.fromRGB(50, 150, 100)
+
+-- STATE LABEL
+local stateLabel = Instance.new("TextLabel", frame)
+stateLabel.Size = UDim2.new(1, 0, 0, 20)
+stateLabel.Position = UDim2.new(0, 0, 0, 30)
+stateLabel.Text = "YOU GOT A HIT!!!"
+stateLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
+stateLabel.Font = Enum.Font.GothamBold
+stateLabel.TextSize = 14
+stateLabel.BackgroundTransparency = 1
+
+-- RANDOMIZER BUTTON
+local randomBtn = Instance.new("TextButton", frame)
+randomBtn.Size = UDim2.new(1, -20, 0, 30)
+randomBtn.Position = UDim2.new(0, 10, 0, 60)
+randomBtn.Text = "Randomizer Paused"
+randomBtn.BackgroundColor3 = Color3.fromRGB(100, 100, 255)
+randomBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+-- AUTO RANDOM BUTTON
+local autoToggle = Instance.new("TextButton", frame)
+autoToggle.Size = UDim2.new(1, -20, 0, 30)
+autoToggle.Position = UDim2.new(0, 10, 0, 100)
+autoToggle.Text = "Auto Randomize: OFF"
+autoToggle.BackgroundColor3 = Color3.fromRGB(255, 80, 80)
+autoToggle.TextColor3 = Color3.new(1,1,1)
+
+-- ESP BUTTON
+local espToggle = Instance.new("TextButton", frame)
+espToggle.Size = UDim2.new(1, -20, 0, 30)
+espToggle.Position = UDim2.new(0, 10, 0, 140)
+espToggle.Text = "Pet ESP: ON"
+espToggle.BackgroundColor3 = Color3.fromRGB(100,255,100)
+espToggle.TextColor3 = Color3.new(0,0,0)
+
+-- SIMULATED OUTPUT
+local pets = {"Seal", "Dragonfly", "Squirrel", "Leafy", "Crystox", "Scorcher", "Frosto"}
+local mutations = {"Glowing Tail", "Rainbow Eyes", "Golden Fur", "Double Jump", "Speed+", "None"}
+local autoRandom = false
+
+-- Simulate randomizing a pet
+local function randomizePet()
+	local chosen = pets[math.random(1, #pets)]
+	local mutate = mutations[math.random(1, #mutations)]
+	stateLabel.Text = "🎲 " .. chosen .. " - Mutation: " .. mutate
+
+	-- Simulate visual pet age
+	local age = 0
+	while age < 50 do
+		age += 1
+		randomBtn.Text = "Pet Age: " .. age
+		wait(0.05)
+	end
+	randomBtn.Text = "Randomizer Paused"
+end
+
+-- Button: Manual Randomize
+randomBtn.MouseButton1Click:Connect(function()
+	randomizePet()
+end)
+
+-- Button: Auto Toggle
+autoToggle.MouseButton1Click:Connect(function()
+	autoRandom = not autoRandom
+	autoToggle.Text = "Auto Randomize: " .. (autoRandom and "ON" or "OFF")
+	if autoRandom then
+		while autoRandom do
+			randomizePet()
+			wait(3)
+		end
+	end
+end)
+
+-- Button: ESP Toggle (visual only)
+espToggle.MouseButton1Click:Connect(function()
+	espToggle.Text = "Pet ESP: " .. (espToggle.Text:find("ON") and "OFF" or "ON")
+end)
