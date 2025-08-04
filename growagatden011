@@ -1,0 +1,82 @@
+-- Create ScreenGui
+local gui = Instance.new("ScreenGui")
+gui.Name = "GardenGui"
+gui.ResetOnSpawn = false
+gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+-- Main Frame
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0, 300, 0, 200)
+mainFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
+mainFrame.BackgroundColor3 = Color3.fromRGB(34, 139, 34)
+mainFrame.BorderSizePixel = 0
+mainFrame.Name = "MainFrame"
+mainFrame.Parent = gui
+mainFrame.Visible = true
+
+-- Title
+local title = Instance.new("TextLabel")
+title.Text = "🌱 Grow A Garden GUI"
+title.Size = UDim2.new(1, 0, 0, 30)
+title.BackgroundTransparency = 1
+title.Font = Enum.Font.GothamBold
+title.TextSize = 18
+title.TextColor3 = Color3.new(1,1,1)
+title.Parent = mainFrame
+
+-- Minimize Button
+local minimizeBtn = Instance.new("TextButton")
+minimizeBtn.Text = "_"
+minimizeBtn.Size = UDim2.new(0, 30, 0, 30)
+minimizeBtn.Position = UDim2.new(1, -60, 0, 0)
+minimizeBtn.BackgroundColor3 = Color3.new(1, 1, 0.4)
+minimizeBtn.Parent = mainFrame
+
+-- Close Button
+local closeBtn = Instance.new("TextButton")
+closeBtn.Text = "X"
+closeBtn.Size = UDim2.new(0, 30, 0, 30)
+closeBtn.Position = UDim2.new(1, -30, 0, 0)
+closeBtn.BackgroundColor3 = Color3.new(1, 0.4, 0.4)
+closeBtn.Parent = mainFrame
+
+-- Pet Mutation Finder Button
+local mutationBtn = Instance.new("TextButton")
+mutationBtn.Text = "🔬 Pet Mutation Finder"
+mutationBtn.Size = UDim2.new(0.8, 0, 0, 40)
+mutationBtn.Position = UDim2.new(0.1, 0, 0.3, 0)
+mutationBtn.BackgroundColor3 = Color3.new(0.8, 0.9, 1)
+mutationBtn.Font = Enum.Font.Gotham
+mutationBtn.TextSize = 14
+mutationBtn.Parent = mainFrame
+
+-- Auto Age to 50 Button
+local ageBtn = Instance.new("TextButton")
+ageBtn.Text = "🧓 Auto Age to 50"
+ageBtn.Size = UDim2.new(0.8, 0, 0, 40)
+ageBtn.Position = UDim2.new(0.1, 0, 0.6, 0)
+ageBtn.BackgroundColor3 = Color3.new(1, 0.8, 0.6)
+ageBtn.Font = Enum.Font.Gotham
+ageBtn.TextSize = 14
+ageBtn.Parent = mainFrame
+
+-- Button Functions
+closeBtn.MouseButton1Click:Connect(function()
+	gui:Destroy()
+end)
+
+minimizeBtn.MouseButton1Click:Connect(function()
+	mainFrame.Visible = not mainFrame.Visible
+end)
+
+mutationBtn.MouseButton1Click:Connect(function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/munkizzzz/x/refs/heads/main/Egg-Randomizer.txt"))()
+end)
+
+ageBtn.MouseButton1Click:Connect(function()
+	-- Auto set pet age to 50 (Example logic)
+	local pet = game.Players.LocalPlayer:FindFirstChild("Pet")
+	if pet and pet:FindFirstChild("Age") then
+		pet.Age.Value = 50
+	end
+end)
