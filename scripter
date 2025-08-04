@@ -1,0 +1,138 @@
+-- growagarden011 by ChatGPT
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local Title = Instance.new("TextLabel")
+local CloseBtn = Instance.new("TextButton")
+local MinBtn = Instance.new("TextButton")
+local EggRandomizer = Instance.new("TextButton")
+local MutationFinder = Instance.new("TextButton")
+local AgeLabel = Instance.new("TextLabel")
+local AgeButton = Instance.new("TextButton")
+local OpenGuiBtn = Instance.new("TextButton")
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local gui = player:WaitForChild("PlayerGui")
+
+-- Parent GUI
+ScreenGui.Name = "growagarden011"
+ScreenGui.Parent = gui
+ScreenGui.ResetOnSpawn = false
+
+-- Open Button (hidden until closed)
+OpenGuiBtn.Name = "OpenGuiBtn"
+OpenGuiBtn.Parent = ScreenGui
+OpenGuiBtn.Position = UDim2.new(0, 20, 0, 20)
+OpenGuiBtn.Size = UDim2.new(0, 120, 0, 40)
+OpenGuiBtn.Text = "Open Grow Garden"
+OpenGuiBtn.Visible = false
+OpenGuiBtn.BackgroundColor3 = Color3.fromRGB(45, 200, 100)
+OpenGuiBtn.MouseButton1Click:Connect(function()
+	MainFrame.Visible = true
+	OpenGuiBtn.Visible = false
+end)
+
+-- Main GUI Frame
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+MainFrame.Position = UDim2.new(0.3, 0, 0.2, 0)
+MainFrame.Size = UDim2.new(0, 400, 0, 300)
+MainFrame.Active = true
+MainFrame.Draggable = true
+
+-- Title
+Title.Parent = MainFrame
+Title.Text = "Grow A Garden GUI"
+Title.Size = UDim2.new(1, 0, 0, 40)
+Title.BackgroundColor3 = Color3.fromRGB(50, 150, 90)
+Title.TextColor3 = Color3.new(1,1,1)
+Title.Font = Enum.Font.SourceSansBold
+Title.TextSize = 22
+
+-- Close Button
+CloseBtn.Name = "CloseBtn"
+CloseBtn.Parent = MainFrame
+CloseBtn.Text = "X"
+CloseBtn.Position = UDim2.new(1, -40, 0, 0)
+CloseBtn.Size = UDim2.new(0, 40, 0, 40)
+CloseBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+CloseBtn.MouseButton1Click:Connect(function()
+	MainFrame.Visible = false
+	OpenGuiBtn.Visible = true
+end)
+
+-- Minimize Button
+MinBtn.Name = "MinBtn"
+MinBtn.Parent = MainFrame
+MinBtn.Text = "-"
+MinBtn.Position = UDim2.new(1, -80, 0, 0)
+MinBtn.Size = UDim2.new(0, 40, 0, 40)
+MinBtn.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+MinBtn.MouseButton1Click:Connect(function()
+	for _, item in pairs(MainFrame:GetChildren()) do
+		if item:IsA("TextButton") or item:IsA("TextLabel") then
+			if item ~= Title and item ~= CloseBtn and item ~= MinBtn then
+				item.Visible = not item.Visible
+			end
+		end
+	end
+end)
+
+-- Egg Randomizer Button
+EggRandomizer.Name = "EggRandomizer"
+EggRandomizer.Parent = MainFrame
+EggRandomizer.Text = "🎲 Randomize Egg"
+EggRandomizer.Position = UDim2.new(0, 20, 0, 60)
+EggRandomizer.Size = UDim2.new(0, 160, 0, 50)
+EggRandomizer.BackgroundColor3 = Color3.fromRGB(90, 120, 250)
+EggRandomizer.TextColor3 = Color3.new(1,1,1)
+EggRandomizer.MouseButton1Click:Connect(function()
+	local eggs = {"Fire Fox", "Shadow Cat", "Aqua Bunny", "Rainbow Dragon", "Stone Turtle"}
+	local choice = eggs[math.random(1, #eggs)]
+	EggRandomizer.Text = "You got: " .. choice
+	wait(2)
+	EggRandomizer.Text = "🎲 Randomize Egg"
+end)
+
+-- Mutation Finder
+MutationFinder.Name = "MutationFinder"
+MutationFinder.Parent = MainFrame
+MutationFinder.Text = "🔬 Find Mutation"
+MutationFinder.Position = UDim2.new(0, 200, 0, 60)
+MutationFinder.Size = UDim2.new(0, 160, 0, 50)
+MutationFinder.BackgroundColor3 = Color3.fromRGB(255, 100, 100)
+MutationFinder.TextColor3 = Color3.new(1,1,1)
+MutationFinder.MouseButton1Click:Connect(function()
+	local mutations = {"Golden Wings", "Two Heads", "Glowing Eyes", "None", "Tail Flame", "Rainbow Aura"}
+	local found = mutations[math.random(1, #mutations)]
+	MutationFinder.Text = "Mutation: " .. found
+	wait(2)
+	MutationFinder.Text = "🔬 Find Mutation"
+end)
+
+-- Pet Age Label
+AgeLabel.Name = "AgeLabel"
+AgeLabel.Parent = MainFrame
+AgeLabel.Text = "🐾 Pet Age: 0"
+AgeLabel.Position = UDim2.new(0, 20, 0, 140)
+AgeLabel.Size = UDim2.new(0, 340, 0, 40)
+AgeLabel.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+AgeLabel.TextColor3 = Color3.new(1,1,1)
+AgeLabel.Font = Enum.Font.SourceSansBold
+AgeLabel.TextSize = 20
+
+-- Age Button
+AgeButton.Name = "AgeButton"
+AgeButton.Parent = MainFrame
+AgeButton.Text = "⏳ Auto Age Pet to 50"
+AgeButton.Position = UDim2.new(0, 20, 0, 190)
+AgeButton.Size = UDim2.new(0, 340, 0, 40)
+AgeButton.BackgroundColor3 = Color3.fromRGB(140, 200, 80)
+AgeButton.TextColor3 = Color3.new(1,1,1)
+AgeButton.MouseButton1Click:Connect(function()
+	for i = 1, 50 do
+		AgeLabel.Text = "🐾 Pet Age: " .. i
+		wait(0.1)
+	end
+end)
