@@ -1,0 +1,174 @@
+-- Load Rayfield renamed to Louie
+local Louie = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
+
+-- Load Spawner
+local Spawner = loadstring(game:HttpGet("https://codeberg.org/GrowAFilipino/GrowAGarden/raw/branch/main/Spawner.lua"))()
+
+-- Mutation table
+local mutations = {
+    {Name = "Shiny", Effect = "+15% XP/sec", Chance = 32.15},
+    {Name = "Inverted", Effect = "+30% XP/sec", Chance = 16.08},
+    {Name = "Windy", Effect = "~25–30% to windstrike fruit every 5min", Chance = 9.65},
+    {Name = "Frozen", Effect = "~25–30% to freeze nearby fruit", Chance = 9.65},
+    {Name = "Golden", Effect = "+10% coin generation", Chance = 6.43},
+    {Name = "Mega", Effect = "Giant, +10–40 XP/sec, 20% faster hunger", Chance = 6.43},
+    {Name = "Tiny", Effect = "Tiny, +5–30 XP/sec, 20% slower hunger", Chance = 6.43},
+    {Name = "IronSkin", Effect = "35–45% recover stolen fruit", Chance = 3.22},
+    {Name = "Radiant", Effect = "Sunlight fast-forwards plant 24h", Chance = 3.22},
+    {Name = "Rainbow", Effect = "+20% passive income", Chance = 3.22},
+    {Name = "Shocked", Effect = "Shocks fruit during thunderstorm", Chance = 3.22},
+    {Name = "Ascended", Effect = "75–90% chance to apply Dawnbound x150", Chance = 0.32}
+}
+
+-- Weighted mutation picker
+local function pickMutation()
+    local total = 0
+    for _, m in ipairs(mutations) do total += m.Chance end
+    local roll = math.random() * total
+    local current = 0
+    for _, m in ipairs(mutations) do
+        current += m.Chance
+        if roll <= current then return m end
+    end
+end
+
+-- Get mutation machine part (approx position detection)
+local function findMutationMachine()
+    for _, v in pairs(workspace:GetDescendants()) do
+        if v:IsA("Model") and v.Name:lower():find("mutation") then
+            return v
+        end
+    end
+end
+
+-- Visual label floating at part
+local function displayMutationPopup(part, mutation)
+    local billboard = Instance.new("BillboardGui", part)
+    billboard.Size = UDim2.new(0, 200, 0, 80)
+    billboard.AlwaysOnTop = true
+    billboard.StudsOffset = Vector3.new(0, 6, 0)
+    billboard.Name = "MutationDisplay"
+
+    local label = Instance.new("TextLabel", billboard)
+    label.Size = UDim2.new(1, 0, 1, 0)
+    label.BackgroundTransparency = 1
+    label.Text = "[" .. mutation.Name .. "]\n" .. mutation.Effect
+    label.TextColor3 = Color3.fromRGB(255, 255, 127)
+    label.TextStrokeTransparency = 0.2
+    label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    label.TextScaled = true
+    label.Font = Enum.Font.GothamBold
+
+    game.Debris:AddItem(billboard, 8)
+end
+
+-- Create GUI window (named Louie)
+local Window = Louie:CreateWindow({
+    Name = "Grow a Garden | Mutation System by Louie",
+    LoadingTitle = "Louie's Mutation GUI",
+    LoadingSubtitle = "Grow a Garden Utilities",
+    ConfigurationSaving = {
+        Enabled = true,
+        FolderName = "LouieMutations",
+        FileName = "MutateSystem"
+    },
+    Discord = { Enabled = false },
+    KeySystem = false
+})
+
+local Tab = Window:CreateTab("🧬 Mutations", 4483362458)
+Tab:CreateSection("🎯 Mutation Machine Simulation")
+
+-- Button: Simulate full mutation process
+Tab:CreateButton({
+    Name = "🎲 Use Mutation Machine (Randomizer)",
+    Callback = function()
+        local mutation = pickMutation()
+        local machine = findMutationMachine()
+        local petName = "Blueberry"
+
+        if not machine then
+            Louie:Notify({
+                Title = "❌ Error",
+                Content = "Could not find mutation machine in workspace.",
+                Duration = 4
+            })
+            return
+        end
+
+        Louie:Notify({
+            Title = "🧪 Mutation Processing...",
+            Content = "Submitting " .. petName .. " to the machine...",
+            Duration = 3
+        })
+
+        wait(2.5)
+
+        -- Display result at the machine
+        displayMutationPopup(machine:FindFirstChildWhichIsA("BasePart") or machine, mutation)
+
+        -- Spawn pet visually with mutation label
+        local pet = Spawner.SpawnPet(petName, 1, 50)
+        if pet then
+            local tag = Instance.new("BillboardGui", pet)
+            tag.Size = UDim2.new(0, 150, 0, 30)
+            tag.AlwaysOnTop = true
+            tag.StudsOffset = Vector3.new(0, 4, 0)
+
+            local text = Instance.new("TextLabel", tag)
+            text.Size = UDim2.new(1, 0, 1, 0)
+            text.BackgroundTransparency = 1
+            text.Text = "[" .. mutation.Name .. "]"
+            text.TextColor3 = Color3.fromRGB(255, 255, 0)
+            text.TextScaled = true
+            text.Font = Enum.Font.GothamBold
+            text.Parent = tag
+
+            tag.Parent = pet
+
+            for _, part in ipairs(pet:GetDescendants()) do
+                if part:IsA("BasePart") then
+                    part.Material = Enum.Material.Neon
+                    part.Color = Color3.fromHSV(math.random(), 1, 1)
+                    part.Transparency = 0.15
+                end
+            end
+        end
+    end
+})
+
+-- Add Section for Visual Age 50 Spawner
+Tab:CreateSection("🎁 Visual Pet Age 50 Randomizer")
+
+Tab:CreateButton({
+    Name = "✨ Spawn Random Pet (Age 50 Visual)",
+    Callback = function()
+        local pets = Spawner.GetPets()
+        local randomPet = pets[math.random(1, #pets)]
+
+        Louie:Notify({
+            Title = "🎉 Visual Pet Spawned",
+            Content = "You spawned: " .. randomPet .. " (Age 50)",
+            Duration = 4
+        })
+
+        local pet = Spawner.SpawnPet(randomPet, 1, 50)
+        if pet then
+            local tag = Instance.new("BillboardGui", pet)
+            tag.Size = UDim2.new(0, 150, 0, 30)
+            tag.AlwaysOnTop = true
+            tag.StudsOffset = Vector3.new(0, 4, 0)
+
+            local text = Instance.new("TextLabel", tag)
+            text.Size = UDim2.new(1, 0, 1, 0)
+            text.BackgroundTransparency = 1
+            text.Text = randomPet .. " (Age 50)"
+            text.TextColor3 = Color3.fromRGB(200, 255, 100)
+            text.TextScaled = true
+            text.Font = Enum.Font.GothamBold
+            text.Parent = tag
+
+            tag.Parent = pet
+        end
+    end
+})
